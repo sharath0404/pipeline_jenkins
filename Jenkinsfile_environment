@@ -1,0 +1,28 @@
+pipeline{
+    agent any
+    environment {
+        USER = 'Sharath'
+        GIT_URL = 'https://github.com/sharath0404/pipeline_jenkins.git'
+        GIT_BRANCH='main'
+        GIT_CREDENTIALS='github_jenkins'
+    }
+    stages {
+        stage('CHECKOUT'){
+            steps {
+              script {
+                git branch: "${env.GIT_BRANCH}", 
+                credentialsId: "${env.GIT_CRENDENTIALS}", 
+                url: "${GIT_URL}"
+              }
+            }
+        }
+        stage('CHECK'){
+            steps{
+                sh '''
+                    ls -lrt
+                    echo " AM insdie Check stages $GIT_URL"
+                '''
+            }
+        }
+    }
+}
