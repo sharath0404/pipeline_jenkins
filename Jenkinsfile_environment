@@ -12,7 +12,7 @@ pipeline{
               script {
                 git branch: "${env.GIT_BRANCH}", 
                 credentialsId: "${env.GIT_CRENDENTIALS}", 
-                url: "${GIT_URL}"
+                url: "${env.GIT_URL}"
               }
             }
         }
