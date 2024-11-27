@@ -1,8 +1,6 @@
 pipeline {
     agent none
-    ansiColor('xterm'){
-
-    }
+    ansiColor('xterm')
     stages {
         stage('STAGE1'){
             agent {
@@ -10,18 +8,18 @@ pipeline {
             }
             steps {
                 ansiColor('xterm') {
-                sh sleep 10
+                 sleep 10
                 echo "This is stage 1"
+                }
             }
-        }
         }
         stage('STAGE2') {
             agent {
                 label 'slave1'
             }
             steps {
-                sh sleep 10
-                echo "This is stage 2"
+                 sleep 10
+                echo 'This is stage 2'
             }
         }
     }
