@@ -11,7 +11,7 @@ pipeline{
             steps {
               script {
                 git branch: "${env.GIT_BRANCH}", 
-                credentialsId: "${env.GIT_CRENDENTIALS}", 
+                credentialsId: "${env.GIT_CREDENTIALS}", 
                 url: "${env.GIT_URL}"
               }
             }
