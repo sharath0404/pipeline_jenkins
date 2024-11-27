@@ -1,6 +1,5 @@
 pipeline {
     agent none
-    ansiColor('xterm')
     stages {
         stage('STAGE1'){
             agent {
