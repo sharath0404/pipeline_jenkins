@@ -6,9 +6,11 @@ pipeline {
                 label 'slave2'
             }
             steps {
+                ansiColor('xterm') {
                 sleep 10
                 echo "This is stage 1"
             }
+        }
         }
         stage('STAGE2') {
             agent {
