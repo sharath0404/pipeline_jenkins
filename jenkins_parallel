@@ -10,6 +10,8 @@ pipeline{
                 '''
             }
         }
+            stage ('Parallel Testing') {
+                parallel{
              stage('STAGE2'){
             steps{
                 sh '''
@@ -27,6 +29,8 @@ pipeline{
                     ls -lrt
                 '''
             }
+             }
+             }
              }
              stage('STAGE4'){
             steps{
