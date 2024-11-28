@@ -1,0 +1,37 @@
+pipeline{
+    agent any
+    stages {
+        stage('STAGE1'){
+            steps{
+                sh '''
+                    echo "This is Stage 1"
+                    ls -lrt
+                '''
+            }
+        }
+             stage('STAGE2'){
+            steps{
+                sh '''
+                    echo "This is stage 2"
+                    ls -lrt
+                '''
+            }
+             }
+             stage('STAGE3'){
+            steps{
+                sh '''
+                    echo "This is stage 3"
+                    ls -lrt
+                '''
+            }
+             }
+             stage('STAGE4'){
+            steps{
+                sh '''
+                    echo "This is stage 4"
+                    ls -lrt
+                '''
+            }
+         }
+    }
+}
