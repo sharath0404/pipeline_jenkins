@@ -1,12 +1,10 @@
 pipeline{
     agent any
     parameters{
-        parameters {
   booleanParam 'BOOLEAN'
   choice choices: ['option 1', 'option 2', 'option 3', 'option 4'], description: 'Choose one option', name: 'CHOICE'
   string defaultValue: 'None', description: 'String option', name: 'STRING'
 }
-    }
     stages {
         stage('STAGE1'){
             steps{
