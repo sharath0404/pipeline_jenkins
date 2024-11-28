@@ -9,6 +9,7 @@ pipeline{
         stage('STAGE1'){
             steps{
                 sh '''
+                    echo "SMS------>"
                     echo "BOOLEAN: ${params.BOOLEAN}"
                     echo "CHOICE: ${params.CHOICE}"
                     echo "STRING: ${params.STRING}"
