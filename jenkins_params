@@ -11,6 +11,7 @@ parameters {
                 sh '''
                     echo "SMS------>"
                     echo "BOOLEAN: ${params.CHECK}"
+                    echo "BOOLEAN: ${params.CHECK}"
                     echo "CHOICE: ${params.CHOICE}"
                     echo "STRING: ${params.STRING1}"
                 '''
