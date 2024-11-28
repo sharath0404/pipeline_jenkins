@@ -1,7 +1,7 @@
 pipeline{
     agent any
     parameters{
-  booleanParam 'BOOLEAN'
+  booleanParam 'CHECK'
   choice choices: ['option 1', 'option 2', 'option 3', 'option 4'], description: 'Choose one option', name: 'CHOICE'
   string defaultValue: 'None', description: 'String option', name: 'STRING'
 }
@@ -10,7 +10,7 @@ pipeline{
             steps{
                 sh '''
                     echo "SMS------>"
-                    echo "BOOLEAN: ${params.BOOLEAN}"
+                    echo "BOOLEAN: ${params.CHECK}"
                     echo "CHOICE: ${params.CHOICE}"
                     echo "STRING: ${params.STRING}"
                 '''
