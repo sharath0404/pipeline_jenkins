@@ -1,0 +1,19 @@
+pipeline{
+    agent any
+
+    options {
+         buildDiscarder logRotator(artifactDaysToKeepStr: '', 
+         artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10')
+    }
+    stages {
+        stage('STAGE1') {
+            steps {
+                sh '''
+                    sleep 10
+                    echo "AM SMS"
+                '''
+            }
+        }
+        
+    }
+}
