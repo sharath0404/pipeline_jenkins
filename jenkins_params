@@ -6,9 +6,9 @@ parameters {
   string defaultValue: 'Sharath', description: 'String option', name: 'STRING1', trim: true
 }
 environment {
-    RUN_PROJECT=${params.RUN_PROJECT}
-    CHOICE=${params.CHOICE}
-    STRING1=${params.STRING1}
+    RUN_PROJECT="${params.RUN_PROJECT}"
+    CHOICE="${params.CHOICE}"
+    STRING1="${params.STRING1}""
 }
     stages {
         stage('STAGE1') {
