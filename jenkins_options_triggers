@@ -2,8 +2,10 @@ pipeline{
     agent any
 
     options {
+          ansiColor('xterm')
          buildDiscarder logRotator(artifactDaysToKeepStr: '', 
          artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')
+        checkoutToSubdirectory '/home/ubuntu/NEW/'
     }
     stages {
         stage('STAGE1') {
