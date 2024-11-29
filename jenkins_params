@@ -8,11 +8,12 @@ parameters {
     stages {
         stage('STAGE1') {
             steps {
-                            
+                sh """            
                     echo "SMS------>"
                     echo "BOOLEAN: ${params.RUN_PROJECT}"
                     echo "CHOICE: ${params.CHOICE}"
                     echo "STRING: ${params.STRING1}"
+                """
             }
         }
         
