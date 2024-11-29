@@ -5,15 +5,25 @@ parameters {
   choice choices: ['option 1', 'option 2', 'option 3', 'option 4'], description: 'Choose one option', name: 'CHOICE'
   string defaultValue: 'Sharath', description: 'String option', name: 'STRING1', trim: true
 }
+environment {
+    RUN_PROJECT=${params.RUN_PROJECT}
+    CHOICE=${params.CHOICE}
+    STRING1=${params.STRING1}
+}
     stages {
         stage('STAGE1') {
             steps {
-                sh """            
-                    echo "SMS------>"
-                    echo "BOOLEAN: ${params.RUN_PROJECT}"
-                    echo "CHOICE: ${params.CHOICE}"
-                    echo "STRING: ${params.STRING1}"
-                """
+                // sh """            
+                //     echo "SMS------>"
+                //     echo "BOOLEAN: ${params.RUN_PROJECT}"
+                //     echo "CHOICE: ${params.CHOICE}"
+                //     echo "STRING: ${params.STRING1}"
+                // """
+                sh '''
+                    echo "BOOLEAN:${RUN_PROJECT}"
+                    echo "CHOICE:${CHOICE}"
+                    echo "STRING:${STRING1}"
+                '''
             }
         }
         
