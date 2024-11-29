@@ -15,13 +15,14 @@ environment {
     post {
         always {
             echo "Job ID : ${JOB_ID}"        
+            script {
                 mail(
-                    subject: "Jenkins Job ID : ${JOB_ID}",
-                    body :"The Jenkins job with ID : ${JOB_ID}",
-                    to: 'sharathfor@gmail.com'.
+                     to: 'sharathfor@gmail.com',
+                     subject: "Jenkins Job ID : ${JOB_ID}",
+                    body :"The Jenkins job with ID : ${JOB_ID} completed".
                 )
 
         }
-
     }
+  }
 }
