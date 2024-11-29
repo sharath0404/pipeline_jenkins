@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+
+    environment {
+        JOB_ID = "${env.BUILD_ID}" 
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                echo "Building"    
+            }
+        }
+
+    }
+
+    post {
+        always {
+            echo "Job ID: ${JOB_ID}"
+            script {
+                mail(
+                    to: 'sharathfor@gmail.com',
+                    subject: "Jenkins Job ID: ${JOB_ID}",
+                    body: "The Jenkins job with ID: ${JOB_ID} has completed."
+
+                )
+            }
+        }
+    }
+}
