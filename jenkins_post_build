@@ -17,8 +17,8 @@ environment {
             echo "Job ID : ${JOB_ID}"        
                 mail(
                     subject: "Jenkins Job ID : ${JOB_ID}",
-                    body :"The Jenkins job with ID : ${JOB_ID}"
-                    to: 'sharathfor@gmail.com'
+                    body :"The Jenkins job with ID : ${JOB_ID}",
+                    to: 'sharathfor@gmail.com'.
                 )
 
         }
