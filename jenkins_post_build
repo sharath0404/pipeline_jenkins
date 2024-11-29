@@ -14,14 +14,13 @@ environment {
     }
     post {
         always {
-            echo "Job ID : ${JOB_ID}"
-            script {
-                emailext(
+            echo "Job ID : ${JOB_ID}"        
+                mail(
                     subject: "Jenkins Job ID : ${JOB_ID}",
                     body :"The Jenkins job with ID : ${JOB_ID}"
                     to: 'sharathfor@gmail.com'
                 )
-            }
+
         }
 
     }
