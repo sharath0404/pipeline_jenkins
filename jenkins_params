@@ -8,7 +8,7 @@ parameters {
 environment {
     RUN_PROJECT="${params.RUN_PROJECT}"
     CHOICE="${params.CHOICE}"
-    STRING1="${params.STRING1}""
+    STRING1="${params.STRING1}"
 }
     stages {
         stage('STAGE1') {
