@@ -1,6 +1,7 @@
 pipeline {
-    agent slave1
-
+    agent {
+      label 'slave1'
+    }
     environment {
         JOB_ID = "${env.BUILD_ID}" 
     }
