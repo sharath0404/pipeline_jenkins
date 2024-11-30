@@ -9,20 +9,32 @@ pipeline{
     stages {
         stage('CHECKOUT'){
             steps {
-                script {
-                  git branch: "${env.GIT_BRANCH}", 
-                  credentialsId: "${env.GIT_CREDENTIALS}", 
-                  url: "${env.GIT_URL}"
-                }
+                // script {
+                //   git branch: "${env.GIT_BRANCH}", 
+                //   credentialsId: "${env.GIT_CREDENTIALS}", 
+                //   url: "${env.GIT_URL}"
+                // }
+                checkout scmGit(branches: [[name: '*/main']],
+                 extensions: [], userRemoteConfigs: [[credentialsId: 'github_jenkins', 
+                 url: 'https://github.com/sharath0404/sharath_install']])
             }
         }
         stage('CHECK'){
+            when {
+                branch 'main'
+            }
             steps{
                 sh '''
                     ls -lrt
                     echo " AM insdie Check stages $GIT_URL"
                 '''
             }
+        }
+        stage('TEST'){
+            when {
+                branch 'master'
+            }
+            echo "Am inside TEST git branch is ${env.GIT_BRANCH}"
         }
     }
 }
