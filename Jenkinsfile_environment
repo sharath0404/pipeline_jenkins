@@ -3,7 +3,7 @@ pipeline{
     environment {
         USER = 'Sharath'
         GIT_URL = 'https://github.com/sharath0404/pipeline_jenkins.git'
-        GIT_BRANCH='main'
+        // GIT_BRANCH='main'
         GIT_CREDENTIALS='github_jenkins'
     }
     stages {
