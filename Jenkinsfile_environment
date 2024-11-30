@@ -21,7 +21,9 @@ pipeline{
         }
         stage('CHECK'){
             when {
-                branch 'main'
+                expression{
+                    env.GIT_BRANCH == 'main'
+                }
             }
             steps{
                 sh '''
@@ -33,7 +35,7 @@ pipeline{
         stage('TEST'){
 
             steps {
-            echo "Am inside TEST git branch is ${env.BRANCH_NAME}"
+            echo "Am inside TEST git branch is ${env.GIT_BRANCH}"
             }
         }
     }
