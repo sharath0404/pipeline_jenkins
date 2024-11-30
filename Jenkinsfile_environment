@@ -31,11 +31,9 @@ pipeline{
             }
         }
         stage('TEST'){
-            when {
-                branch 'master'
-            }
+
             steps {
-            echo "Am inside TEST git branch is ${env.GIT_BRANCH}"
+            echo "Am inside TEST git branch is ${env.BRANCH_NAME}"
             }
         }
     }
