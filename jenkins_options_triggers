@@ -1,18 +1,21 @@
 pipeline{
     agent any
 
-    options {
-          ansiColor('xterm')
-         buildDiscarder logRotator(artifactDaysToKeepStr: '', 
-         artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')
-        checkoutToSubdirectory '/home/ubuntu/NEW/'
+    // options {
+    //       ansiColor('xterm')
+    //      buildDiscarder logRotator(artifactDaysToKeepStr: '', 
+    //      artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')
+    //       checkoutToSubdirectory '/home/ubuntu/NEW/'
+    // }
+    triggers{
+        cron('*/2 * * * * ')
     }
     stages {
         stage('STAGE1') {
             steps {
                 sh '''
                     sleep 10
-                    echo "AM SMS"
+                    echo "AM SMS Printing"
                 '''
             }
         }
