@@ -34,7 +34,9 @@ pipeline{
             when {
                 branch 'master'
             }
+            steps {
             echo "Am inside TEST git branch is ${env.GIT_BRANCH}"
+            }
         }
     }
 }
