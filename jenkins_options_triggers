@@ -9,6 +9,7 @@ pipeline{
     // }
     triggers{
         cron('*/2 * * * * ')
+        pollSCM('H */5 * * 1-5')
     }
     stages {
         stage('STAGE1') {
