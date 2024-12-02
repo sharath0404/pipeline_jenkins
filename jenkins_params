@@ -1,10 +1,10 @@
 pipeline{
     agent any
-parameters {
-  booleanParam defaultValue: true, description: 'Boolean Params check', name: 'RUN_PROJECT'
-  choice choices: ['option 1', 'option 2', 'option 3', 'option 4'], description: 'Choose one option', name: 'CHOICE'
-  string defaultValue: 'Sharath', description: 'String option', name: 'STRING1', trim: true
-}
+// parameters {
+//   booleanParam defaultValue: true, description: 'Boolean Params check', name: 'RUN_PROJECT'
+//   choice choices: ['option 1', 'option 2', 'option 3', 'option 4'], description: 'Choose one option', name: 'CHOICE'
+//   string defaultValue: 'Sharath', description: 'String option', name: 'STRING1', trim: true
+// }
 environment {
     RUN_PROJECT="${params.RUN_PROJECT}"
     CHOICE="${params.CHOICE}"
@@ -19,11 +19,13 @@ environment {
                 //     echo "CHOICE: ${params.CHOICE}"
                 //     echo "STRING: ${params.STRING1}"
                 // """
-                sh '''
-                    echo "BOOLEAN:${RUN_PROJECT}"
-                    echo "CHOICE:${CHOICE}"
-                    echo "STRING:${STRING1}"
-                '''
+                input 'Do i need to proeed with the new stage ?'
+                 echo "SMS------>"
+                // sh '''
+                //     echo "BOOLEAN:${RUN_PROJECT}"
+                //     echo "CHOICE:${CHOICE}"
+                //     echo "STRING:${STRING1}"
+                // '''
             }
         }
         
