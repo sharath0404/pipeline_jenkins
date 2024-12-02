@@ -23,6 +23,18 @@ environment {
                 )
 
         }
+        faliure {
+            echo "Any one of stage fails"
+        }
+        success {
+            echo "This will run when build success"
+        }
+        unstable{
+            echo "This will run when it is unstable"
+        }
+        aborted {
+            echo "This will run when we aborted"
+        }
     }
   }
 }
