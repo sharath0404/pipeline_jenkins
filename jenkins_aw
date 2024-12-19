@@ -12,7 +12,7 @@ pipeline {
                     withAWS(region: "${AWS_REGION}", credentials: "${AWS_CREDENTIALS}") {
                         echo "Starting EC2 instance: ${INSTANCE_ID}"
                         awsCommand("ec2 start-instances --instance-ids ${INSTANCE_ID}")
-                        #ec2StartInstances(instances: ["${INSTANCE_ID}"])
+                        //ec2StartInstances(instances: ["${INSTANCE_ID}"])
                     }
                 }
             }
@@ -23,7 +23,7 @@ pipeline {
                     withAWS(region: "${AWS_REGION}", credentials: "${AWS_CREDENTIALS}") {
                         echo "Stopping EC2 instance: ${INSTANCE_ID}"
                         awsCommand("ec2 stop-instances --instance-ids ${INSTANCE_ID}")
-                        #ec2StopInstances(instances: ["${INSTANCE_ID}"])
+                        //ec2StopInstances(instances: ["${INSTANCE_ID}"])
                     }
                 }
             }
