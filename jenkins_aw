@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+    environment {
+        AWS_REGION = 'us-east-1'           // Define the AWS region
+        AWS_CREDENTIALS = 'aws-credentials-id' // Replace with your Jenkins AWS credential ID
+        INSTANCE_ID = 'i-1234567890abcdef'     // Replace with your instance ID
+    }
+    stages {
+        stage('Start Instance') {
+            steps {
+                script {
+                    withAWS(region: "${AWS_REGION}", credentials: "${AWS_CREDENTIALS}") {
+                        echo "Starting EC2 instance: ${INSTANCE_ID}"
+                        ec2StartInstances(instances: ["${INSTANCE_ID}"])
+                    }
+                }
+            }
+        }
+        stage('Stop Instance') {
+            steps {
+                script {
+                    withAWS(region: "${AWS_REGION}", credentials: "${AWS_CREDENTIALS}") {
+                        echo "Stopping EC2 instance: ${INSTANCE_ID}"
+                        ec2StopInstances(instances: ["${INSTANCE_ID}"])
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            echo 'Pipeline execution completed.'
+        }
+    }
+}
