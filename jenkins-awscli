@@ -35,10 +35,9 @@ pipeline {
                         """
                      }
                     }
-                    }
+                 } 
                 }
             }
-        }
 
         stage('Wait for EC2 Instance Action Completion') {
             steps {
@@ -64,4 +63,5 @@ pipeline {
             }
         }
     }
-}
+    }
+
