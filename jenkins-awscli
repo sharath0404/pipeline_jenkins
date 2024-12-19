@@ -25,6 +25,7 @@ pipeline {
                         sh """
                             aws ec2 start-instances --instance-ids ${INSTANCE_ID}
                         """
+                        }
                     }
                     else if (action == 'Stop')
                     {
@@ -32,6 +33,7 @@ pipeline {
                         sh """
                             aws ec2 stop-instances --instance-ids ${INSTANCE_ID}
                         """
+                     }
                     }
                     }
                 }
