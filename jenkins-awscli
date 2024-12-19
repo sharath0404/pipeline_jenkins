@@ -38,17 +38,6 @@ pipeline {
             }
         }
 
-        stage('Wait for EC2 Instance to be Running') {
-            steps {
-                script {
-                    // Wait for the instance to be running
-                    sh """
-                        aws ec2 wait instance-running --instance-ids ${INSTANCE_ID}
-                    """
-                }
-            }
-        }
-
         stage('Wait for EC2 Instance Action Completion') {
             steps {
                 script {
