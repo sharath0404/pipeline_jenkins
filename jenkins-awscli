@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+    environment {
+        AWS_CREDENTIALS = 'jenkins-aws-access' // AWS credentials ID
+        INSTANCE_ID = 'i-033939254e3e21652'    // Your EC2 instance ID
+    }
+    stages {
+        stage('Start EC2 Instance') {
+            steps {
+                script {
+                    // Set the AWS credentials environment variables
+                    withCredentials([aws(credentialsId: AWS_CREDENTIALS)]) {
+                        // Run AWS CLI command to start the instance
+                        sh """
+                            aws ec2 start-instances --instance-ids ${INSTANCE_ID}
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Wait for EC2 Instance to be Running') {
+            steps {
+                script {
+                    // Wait for the instance to be running
+                    sh """
+                        aws ec2 wait instance-running --instance-ids ${INSTANCE_ID}
+                    """
+                }
+            }
+        }
+
+        stage('Stop EC2 Instance') {
+            steps {
+                script {
+                    // Stop the EC2 instance using AWS CLI
+                    withCredentials([aws(credentialsId: AWS_CREDENTIALS)]) {
+                        sh """
+                            aws ec2 stop-instances --instance-ids ${INSTANCE_ID}
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Wait for EC2 Instance to Stop') {
+            steps {
+                script {
+                    // Wait for the instance to stop
+                    sh """
+                        aws ec2 wait instance-stopped --instance-ids ${INSTANCE_ID}
+                    """
+                }
+            }
+        }
+    }
+}
