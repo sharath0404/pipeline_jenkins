@@ -1,9 +1,9 @@
 pipeline {
     agent any
     environment {
-        AWS_REGION = 'us-east-1'           // Define the AWS region
-        AWS_CREDENTIALS = 'aws-credentials-id' // Replace with your Jenkins AWS credential ID
-        INSTANCE_ID = 'i-1234567890abcdef'     // Replace with your instance ID
+        AWS_REGION = 'ap-south-1'           // Define the AWS region
+        AWS_CREDENTIALS = 'jenkins-aws-access' // Replace with your Jenkins AWS credential ID
+        INSTANCE_ID = 'i-033939254e3e21652'     // Replace with your instance ID
     }
     stages {
         stage('Start Instance') {
