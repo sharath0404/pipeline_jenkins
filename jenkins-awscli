@@ -23,7 +23,7 @@ pipeline {
                         withCredentials([aws(credentialsId: AWS_CREDENTIALS)]) {
                         // Run AWS CLI command to start the instance
                         sh """
-                            aws ec2 start-instances --instance-ids ${INSTANCE_ID}
+                            aws ec2 start-instances --instance-ids ${selectedInstanceId}
                         """
                         }
                     }
@@ -31,7 +31,7 @@ pipeline {
                     {
                         withCredentials([aws(credentialsId: AWS_CREDENTIALS)]) {
                         sh """
-                            aws ec2 stop-instances --instance-ids ${INSTANCE_ID}
+                            aws ec2 stop-instances --instance-ids ${selectedInstanceId}
                         """
                      }
                     }
@@ -49,14 +49,14 @@ pipeline {
                     {
                                             // Wait for the instance to be running
                     sh """
-                        aws ec2 wait instance-running --instance-ids ${INSTANCE_ID}
+                        aws ec2 wait instance-running --instance-ids ${selectedInstanceId}
                     """
                     }
                     else if (action == 'Stop')
                     {
                     // Wait for the instance to stop
                     sh """
-                        aws ec2 wait instance-stopped --instance-ids ${INSTANCE_ID}
+                        aws ec2 wait instance-stopped --instance-ids ${selectedInstanceId}
                     """
                     }
                 }
