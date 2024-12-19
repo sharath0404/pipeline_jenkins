@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+    label 'slave1'
+    }
     environment {
         AWS_CREDENTIALS = 'jenkins-aws-access' // AWS credentials ID
         INSTANCE_ID = 'i-033939254e3e21652'    // Your EC2 instance ID
