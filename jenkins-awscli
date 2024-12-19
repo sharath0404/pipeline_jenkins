@@ -2,20 +2,37 @@ pipeline {
     agent {
     label 'slave1'
     }
+      parameters {
+            choice choices: ['Start,Stop'], description: 'start or stop the instance', name: 'ACTION'
+            string defaultValue: 'i-033939254e3e21652', description: 'Select instance id', name: 'INSTANCE_ID_INPUT'
+
+   }
     environment {
         AWS_CREDENTIALS = 'jenkins-aws-access' // AWS credentials ID
         INSTANCE_ID = 'i-033939254e3e21652'    // Your EC2 instance ID
     }
     stages {
-        stage('Start EC2 Instance') {
+        stage('Start or Stop EC2 Instance') {
             steps {
                 script {
+                    def selectedInstanceId = params.INSTANCE_ID_INPUT?: INSTANCE_ID
+                    def action = params.ACTION
                     // Set the AWS credentials environment variables
-                    withCredentials([aws(credentialsId: AWS_CREDENTIALS)]) {
+                    if (action == 'Start')
+                    {
+                        withCredentials([aws(credentialsId: AWS_CREDENTIALS)]) {
                         // Run AWS CLI command to start the instance
                         sh """
                             aws ec2 start-instances --instance-ids ${INSTANCE_ID}
                         """
+                    }
+                    else if (action == 'Stop')
+                    {
+                        withCredentials([aws(credentialsId: AWS_CREDENTIALS)]) {
+                        sh """
+                            aws ec2 stop-instances --instance-ids ${INSTANCE_ID}
+                        """
+                    }
                     }
                 }
             }
@@ -32,26 +49,26 @@ pipeline {
             }
         }
 
-        stage('Stop EC2 Instance') {
+        stage('Wait for EC2 Instance Action Completion') {
             steps {
                 script {
-                    // Stop the EC2 instance using AWS CLI
-                    withCredentials([aws(credentialsId: AWS_CREDENTIALS)]) {
-                        sh """
-                            aws ec2 stop-instances --instance-ids ${INSTANCE_ID}
-                        """
-                    }
-                }
-            }
-        }
+                    def selectedInstanceId = params.INSTANCE_ID_INPUT ?: INSTANCE_ID
+                    def action = params.ACTION
 
-        stage('Wait for EC2 Instance to Stop') {
-            steps {
-                script {
+                    if (action == 'Start')
+                    {
+                                            // Wait for the instance to be running
+                    sh """
+                        aws ec2 wait instance-running --instance-ids ${INSTANCE_ID}
+                    """
+                    }
+                    else if (action == 'Stop')
+                    {
                     // Wait for the instance to stop
                     sh """
                         aws ec2 wait instance-stopped --instance-ids ${INSTANCE_ID}
                     """
+                    }
                 }
             }
         }
