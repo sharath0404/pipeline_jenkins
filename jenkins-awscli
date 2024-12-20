@@ -8,8 +8,8 @@ pipeline {
 
    }
     environment {
-        AWS_CREDENTIALS = 'jenkins-aws-access' // AWS credentials ID
-        INSTANCE_ID = 'i-033939254e3e21652'    // Your EC2 instance ID
+        AWS_CREDENTIALS = 'jenkins-aws-access' 
+        INSTANCE_ID = 'i-033939254e3e21652'    
     }
     stages {
         stage('Start or Stop EC2 Instance') {
@@ -17,12 +17,13 @@ pipeline {
                 script {
                     def selectedInstanceId = params.INSTANCE_ID_INPUT?: INSTANCE_ID
                     def action = params.ACTION
-                    // Set the AWS credentials environment variables
+                  
                     if (action == 'Start')
                     {
                         withCredentials([aws(credentialsId: AWS_CREDENTIALS)]) {
-                        // Run AWS CLI command to start the instance
+                    
                         sh """
+                            aws sts get-caller-identity
                             aws ec2 start-instances --instance-ids ${selectedInstanceId}
                         """
                         }
@@ -47,7 +48,7 @@ pipeline {
 
                     if (action == 'Start')
                     {
-                                            // Wait for the instance to be running
+                                            
                     sh """
                         aws ec2 wait instance-running --instance-ids ${selectedInstanceId}
                     """
