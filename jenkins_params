@@ -9,11 +9,14 @@ environment {
     RUN_PROJECT="${params.RUN_PROJECT}"
     CHOICE="${params.CHOICE}"
     STRING1="${params.STRING1}"
+    BASH_PATH = 'C:/Program Files/Git/bin/bash.exe'
+-
 }
+
     stages {
         stage('STAGE1') {
             steps {
-                 sh """            
+                 \"${BASH_PATH}\" -c """            
                      echo "SMS------>"
                      echo "BOOLEAN: ${params.RUN_PROJECT}"
                      echo "CHOICE: ${params.CHOICE}"
