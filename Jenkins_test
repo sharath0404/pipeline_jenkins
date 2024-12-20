@@ -1,19 +1,45 @@
 pipeline {
     agent any
     environment {
-        BASH_PATH = 'C:/Program Files/Git/bin/bash.exe'
+            AWS_CREDENTIALS = 'jenkins-aws-access' 
+        INSTANCE_ID = 'i-033939254e3e21652'
+    BASH_PATH = 'C:/Program Files/Git/bin/bash.exe'
     }
+        parameters {
+            choice choices: ['Start','Stop'], description: 'start or stop the instance', name: 'ACTION'
+            string defaultValue: 'i-033939254e3e21652', description: 'Select instance id', name: 'INSTANCE_ID_INPUT'
 
-    stages {
-        stage('Example') {
+   }
+
+        stages {
+        stage('Start or Stop EC2 Instance') {
             steps {
                 script {
-                    def command = """\
-                    \"${BASH_PATH}\" -c 'aws ec2 describe-instances --region ap-south-1'
-                    """
-                    bat script: command
+                    def selectedInstanceId = params.INSTANCE_ID_INPUT?: INSTANCE_ID
+                    def action = params.ACTION
+                  
+                    if (action == 'Start')
+                    {
+                        withCredentials([aws(credentialsId: AWS_CREDENTIALS)]) {
+                    
+                        sh """
+                            aws sts get-caller-identity
+                            aws s3 ls
+                            aws ec2 start-instances --instance-ids ${selectedInstanceId}
+                        """
+                        }
+                    }
+                    else if (action == 'Stop')
+                    {
+                        withCredentials([aws(credentialsId: AWS_CREDENTIALS)]) {
+                        sh """
+                            aws s3 ls
+                            aws ec2 stop-instances --instance-ids ${selectedInstanceId}
+                        """
+                     }
+                    }
+                 } 
                 }
             }
-        }
-    }
+
 }
