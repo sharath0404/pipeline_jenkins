@@ -1,45 +1,51 @@
 pipeline {
     agent any
+
     environment {
-            AWS_CREDENTIALS = 'aws-jenkins' 
+        AWS_CREDENTIALS = 'aws-jenkins'    // Use Jenkins credentials ID
         INSTANCE_ID = 'i-033939254e3e21652'
-    BASH_PATH = 'C:/Program Files/Git/bin/bash.exe'
+        BASH_PATH = 'C:/Program Files/Git/bin/bash.exe' // Ensure the Git Bash path is correct
     }
-        parameters {
-            choice choices: ['Start','Stop'], description: 'start or stop the instance', name: 'ACTION'
-            string defaultValue: 'i-033939254e3e21652', description: 'Select instance id', name: 'INSTANCE_ID_INPUT'
 
-   }
+    parameters {
+        choice choices: ['Start', 'Stop'], description: 'Start or Stop the EC2 instance', name: 'ACTION'
+        string defaultValue: 'i-033939254e3e21652', description: 'Select instance id', name: 'INSTANCE_ID_INPUT'
+    }
 
-        stages {
+    stages {
         stage('Start or Stop EC2 Instance') {
             steps {
                 script {
-                    def selectedInstanceId = params.INSTANCE_ID_INPUT?: INSTANCE_ID
-                    def action = params.ACTION
-                  
-                    if (action == 'Start')
-                    {
+                    def selectedInstanceId = params.INSTANCE_ID_INPUT ?: INSTANCE_ID // Use instance ID from input or default
+                    def action = params.ACTION  // Action (Start or Stop)
+
+                    if (action == 'Start') {
                         withCredentials([aws(credentialsId: AWS_CREDENTIALS)]) {
-                    
-                           \"${BASH_PATH}\" -c  """
-                            aws sts get-caller-identity
-                            aws s3 ls
-                            aws ec2 start-instances --instance-ids ${selectedInstanceId}
-                        """
+                            // Refactored shell command execution in one call to avoid issues with multi-line
+                            def command = """
+                            \"${BASH_PATH}\" -c "
+                            aws sts get-caller-identity && \
+                            aws s3 ls && \
+                            aws ec2 start-instances --instance-ids ${selectedInstanceId} --region ${env.AWS_DEFAULT_REGION}
+                            "
+                            """
+                            bat script: command, returnStdout: true
+                        }
+                    } else if (action == 'Stop') {
+                        withCredentials([aws(credentialsId: AWS_CREDENTIALS)]) {
+                            // Refactored shell command execution for stopping instances
+                            def command = """
+                            \"${BASH_PATH}\" -c "
+                            aws s3 ls && \
+                            aws ec2 stop-instances --instance-ids ${selectedInstanceId} --region ${env.AWS_DEFAULT_REGION}
+                            "
+                            """
+                            bat script: command, returnStdout: true
                         }
                     }
-                    else if (action == 'Stop')
-                    {
-                        withCredentials([aws(credentialsId: AWS_CREDENTIALS)]) {
-                           \"${BASH_PATH}\" -c  """
-                            aws s3 ls
-                            aws ec2 stop-instances --instance-ids ${selectedInstanceId}
-                        """
-                     }
-                    }
-                 } 
                 }
             }
-
+        }
+    }
 }
+
