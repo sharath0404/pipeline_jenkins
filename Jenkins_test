@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent slave1
       
      parameters {
          choice choices: ['Start','Stop'], description: 'start or stop the instance', name: 'ACTION'
@@ -14,8 +14,7 @@ pipeline {
         stage('Fetch Instances by Tags') {
             steps {
                 script {
-                    def instances = bat(
-                        script: """
+                    // Fetch instances based on tags
                     def instances = sh(
                         script: """
                         aws ec2 describe-instances \
