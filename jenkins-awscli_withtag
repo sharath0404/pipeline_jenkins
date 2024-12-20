@@ -14,8 +14,6 @@ pipeline {
         stage('Fetch Instances by Tags') {
             steps {
                 script {
-                    def instances = bat(
-                        script: """
                     def instances = sh(
                         script: """
                         aws ec2 describe-instances \
