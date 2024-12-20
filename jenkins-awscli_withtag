@@ -8,6 +8,8 @@ pipeline {
         AWS_REGION = 'ap-south-1' // Specify your AWS region
         INSTANCE_TAG_KEY = 'Environment' // Tag key
         INSTANCE_TAG_VALUE = 'Developer' // Tag value
+        // Define path to Git Bash executable (bash.exe)
+        BASH_PATH = 'C:/Program Files/Git/bin/bash.exe'
     }
 
     stages {
@@ -15,13 +17,14 @@ pipeline {
             steps {
                 script {
                     // Fetch instances based on tags
-                    def instances = sh(
+                    def instances = bat(
                         script: """
+                         \"${BASH_PATH}\" -c "
                         aws ec2 describe-instances \
                             --filters "Name=tag:${env.INSTANCE_TAG_KEY},Values=${env.INSTANCE_TAG_VALUE}" \
                             --query "Reservations[].Instances[].InstanceId" \
                             --region ${env.AWS_REGION} \
-                            --output text
+                            --output text "
                         """,
                         returnStdout: true
                     ).trim()
