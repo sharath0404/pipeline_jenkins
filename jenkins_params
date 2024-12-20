@@ -13,12 +13,12 @@ environment {
     stages {
         stage('STAGE1') {
             steps {
-                // sh """            
-                //     echo "SMS------>"
-                //     echo "BOOLEAN: ${params.RUN_PROJECT}"
-                //     echo "CHOICE: ${params.CHOICE}"
-                //     echo "STRING: ${params.STRING1}"
-                // """
+                 sh """            
+                     echo "SMS------>"
+                     echo "BOOLEAN: ${params.RUN_PROJECT}"
+                     echo "CHOICE: ${params.CHOICE}"
+                     echo "STRING: ${params.STRING1}"
+                 """
                 input 'Do i need to proeed with the new stage ?'
                  echo "SMS------>"
                 // sh '''
