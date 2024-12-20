@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-            AWS_CREDENTIALS = 'jenkins-aws-access' 
+            AWS_CREDENTIALS = 'aws-jenkins' 
         INSTANCE_ID = 'i-033939254e3e21652'
     BASH_PATH = 'C:/Program Files/Git/bin/bash.exe'
     }
