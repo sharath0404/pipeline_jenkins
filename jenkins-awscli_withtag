@@ -44,10 +44,11 @@ pipeline {
                 script {
                     if (env.INSTANCE_IDS) {
                         // Stop instances
-                        sh """
-                        aws ec2 stop-instances \
+                        bat """
+                          \"${BASH_PATH}\" -c
+                        "aws ec2 stop-instances \
                             --instance-ids ${env.INSTANCE_IDS} \
-                            --region ${env.AWS_REGION}
+                            --region ${env.AWS_REGION}"
                         """
                         println("Stopped instances: ${env.INSTANCE_IDS}")
                     }
@@ -60,10 +61,10 @@ pipeline {
                 script {
                     if (env.INSTANCE_IDS) {
                         // Start instances
-                        sh """
-                        aws ec2 start-instances \
+                        bat """
+                          \"${BASH_PATH}\" -c "aws ec2 start-instances \
                             --instance-ids ${env.INSTANCE_IDS} \
-                            --region ${env.AWS_REGION}
+                            --region ${env.AWS_REGION}"
                         """
                         println("Started instances: ${env.INSTANCE_IDS}")
                     }
