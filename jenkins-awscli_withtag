@@ -1,5 +1,5 @@
 pipeline {
-    agent slave1
+    agent any
       
      parameters {
          choice choices: ['Start','Stop'], description: 'start or stop the instance', name: 'ACTION'
