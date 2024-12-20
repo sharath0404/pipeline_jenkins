@@ -1,69 +1,17 @@
 pipeline {
-    agent slave1
-      
-     parameters {
-         choice choices: ['Start','Stop'], description: 'start or stop the instance', name: 'ACTION'
-      }
+    agent any
     environment {
-        AWS_REGION = 'ap-south-1' // Specify your AWS region
-        INSTANCE_TAG_KEY = 'Environment' // Tag key
-        INSTANCE_TAG_VALUE = 'Developer' // Tag value
+        BASH_PATH = 'C:/Program Files/Git/bin/bash.exe'
     }
 
     stages {
-        stage('Fetch Instances by Tags') {
+        stage('Example') {
             steps {
                 script {
-                    // Fetch instances based on tags
-                    def instances = sh(
-                        script: """
-                        aws ec2 describe-instances \
-                            --filters "Name=tag:${env.INSTANCE_TAG_KEY},Values=${env.INSTANCE_TAG_VALUE}" \
-                            --query "Reservations[].Instances[].InstanceId" \
-                            --region ${env.AWS_REGION} \
-                            --output text
-                        """,
-                        returnStdout: true
-                    ).trim()
-
-                    if (instances) {
-                        println("Instances found: ${instances}")
-                        env.INSTANCE_IDS = instances // Store instance IDs
-                    } else {
-                        error("No instances found with tag ${env.INSTANCE_TAG_KEY}=${env.INSTANCE_TAG_VALUE}")
-                    }
-                }
-            }
-        }
-
-        stage('Stop Instances') {
-            steps {
-                script {
-                    if (env.INSTANCE_IDS) {
-                        // Stop instances
-                        sh """
-                        aws ec2 stop-instances \
-                            --instance-ids ${env.INSTANCE_IDS} \
-                            --region ${env.AWS_REGION}
-                        """
-                        println("Stopped instances: ${env.INSTANCE_IDS}")
-                    }
-                }
-            }
-        }
-
-        stage('Start Instances') {
-            steps {
-                script {
-                    if (env.INSTANCE_IDS) {
-                        // Start instances
-                        sh """
-                        aws ec2 start-instances \
-                            --instance-ids ${env.INSTANCE_IDS} \
-                            --region ${env.AWS_REGION}
-                        """
-                        println("Started instances: ${env.INSTANCE_IDS}")
-                    }
+                    def command = """\
+                    \"${BASH_PATH}\" -c 'aws ec2 describe-instances --region ap-south-1'
+                    """
+                    bat script: command
                 }
             }
         }
