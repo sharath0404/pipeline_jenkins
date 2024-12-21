@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-    label 'slave1'
-    }
+    agent any
       parameters {
             choice choices: ['Start','Stop'], description: 'start or stop the instance', name: 'ACTION'
             string defaultValue: 'i-033939254e3e21652', description: 'Select instance id', name: 'INSTANCE_ID_INPUT'
