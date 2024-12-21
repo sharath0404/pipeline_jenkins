@@ -1,0 +1,81 @@
+pipeline {
+    agent any
+
+    parameters {
+        choice(choices: ['Start', 'Stop'], description: 'Start or Stop the instance', name: 'ACTION')
+        string(defaultValue: 'Developer', description: 'Provide the tag value (e.g., Developer, Tester)', name: 'TAG_VALUE')
+    }
+
+    environment {
+        AWS_REGION = 'ap-south-1' // Specify your AWS region
+        INSTANCE_TAG_KEY = 'Environment' // Static tag key
+    }
+
+    stages {
+        stage('Fetch Instances by Tags') {
+            steps {
+                script {
+                    def instances = sh(
+                        script: """
+                        aws ec2 describe-instances \
+                            --filters "Name=tag:${env.INSTANCE_TAG_KEY},Values=${params.TAG_VALUE}" \
+                            --query "Reservations[].Instances[].InstanceId" \
+                            --region ${env.AWS_REGION} \
+                            --output text
+                        """,
+                        returnStdout: true
+                    ).trim()
+
+                    if (instances) {
+                        println("Instances found for tag value '${params.TAG_VALUE}': ${instances}")
+                        env.INSTANCE_IDS = instances // Store instance IDs
+                    } else {
+                        error("No instances found with tag ${env.INSTANCE_TAG_KEY}=${params.TAG_VALUE}")
+                    }
+                }
+            }
+        }
+
+        stage('Stop Instances') {
+            when {
+                expression { params.ACTION == 'Stop' }
+            }
+            steps {
+                script {
+                    if (env.INSTANCE_IDS) {
+                        // Stop instances
+                        sh """
+                        aws ec2 stop-instances \
+                            --instance-ids ${env.INSTANCE_IDS} \
+                            --region ${env.AWS_REGION}
+                        """
+                        println("Stopped instances: ${env.INSTANCE_IDS}")
+                    } else {
+                        error("No instances to stop.")
+                    }
+                }
+            }
+        }
+
+        stage('Start Instances') {
+            when {
+                expression { params.ACTION == 'Start' }
+            }
+            steps {
+                script {
+                    if (env.INSTANCE_IDS) {
+                        // Start instances
+                        sh """
+                        aws ec2 start-instances \
+                            --instance-ids ${env.INSTANCE_IDS} \
+                            --region ${env.AWS_REGION}
+                        """
+                        println("Started instances: ${env.INSTANCE_IDS}")
+                    } else {
+                        error("No instances to start.")
+                    }
+                }
+            }
+        }
+    }
+}
