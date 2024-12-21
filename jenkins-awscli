@@ -6,7 +6,7 @@ pipeline {
 
    }
     environment {
-        AWS_CREDENTIALS = 'jenkins-aws-access' 
+        AWS_CREDENTIALS = 'aws-jenkins' 
         INSTANCE_ID = 'i-033939254e3e21652'    
     }
     stages {
