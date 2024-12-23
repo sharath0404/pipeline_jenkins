@@ -3,6 +3,7 @@ pipeline {
       
      parameters {
          choice choices: ['Start','Stop'], description: 'start or stop the instance', name: 'ACTION'
+         
       }
     environment {
         AWS_REGION = 'ap-south-1' // Specify your AWS region
