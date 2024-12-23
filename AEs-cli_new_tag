@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    triggers {
+      cron '0 12 * * *'
+    }
+
     parameters {
         choice(choices: ['Start', 'Stop'], description: 'Start or Stop the instance', name: 'ACTION')
         string(defaultValue: 'Developer', description: 'Provide the tag value (e.g., Developer, Tester)', name: 'TAG_VALUE')
