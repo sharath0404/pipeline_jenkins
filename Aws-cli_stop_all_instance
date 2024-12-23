@@ -1,0 +1,109 @@
+pipeline {
+    agent any
+
+    triggers {
+      cron 'H 0 * * *'
+    }
+
+    parameters {
+        choice(choices: ['Stop', 'Start'], description: 'Start or Stop the instance', name: 'ACTION')
+    }
+
+    environment {
+        AWS_REGION = 'ap-south-1' // Specify your AWS region
+        INSTANCE_TAG_KEY = 'Environment' // Static tag key
+    }
+
+    stages {
+                stage('Fetch Instances by State') {
+            steps {
+                script {
+                    // Query running instances
+                    def runningInstances = fetchInstancesByState('running')
+                    // Query stopped instances
+                    def stoppedInstances = fetchInstancesByState('stopped')
+
+                    // Check and store found instance IDs for both states
+                    if (runningInstances) {
+                        env.RUNNING_INSTANCE_IDS = runningInstances
+                        println("Running instances found: ${env.RUNNING_INSTANCE_IDS}")
+                    } else {
+                        println("No running instances found")
+                    }
+
+                    if (stoppedInstances) {
+                        env.STOPPED_INSTANCE_IDS = stoppedInstances
+                        println("Stopped instances found: ${env.STOPPED_INSTANCE_IDS}")
+                    } else {
+                        println("No stopped instances found")
+                    }
+                }
+            }
+        }
+
+
+        stage('Stop Instances') {
+            when {
+                expression { 
+                     if ( params.ACTION == 'Stop' && env.RUNNING_INSTANCE_IDS )
+                     {
+                        return true
+                     }
+                     else 
+                     {
+                        return false
+                     }
+                    
+                    }
+            }
+            steps {
+                script {
+                        // Stop instances
+                        sh """
+                        aws ec2 stop-instances \
+                            --instance-ids ${env.RUNNING_INSTANCE_ID} \
+                            --region ${env.AWS_REGION}
+                        """
+                        println("Stopped instances: ${env.RUNNING_INSTANCE_ID}")
+                }
+            }
+        }
+
+        stage('Start Instances') {
+            when {
+                expression { 
+                     if ( params.ACTION == 'Start' && env.STOPPED_INSTANCE_IDS )
+                     {
+                        return true
+                     }
+                     else 
+                     {
+                        return false
+                     }
+
+                 }
+            }
+            steps {
+                script {
+                        // Start instances
+                        sh """
+                        aws ec2 start-instances \
+                            --instance-ids ${env.STOPPED_INSTANCE_IDS} \
+                            --region ${env.AWS_REGION}
+                        """
+                        println("Started instances: ${env.STOPPED_INSTANCE_IDS}")
+                }
+            }
+        }
+    }
+}
+
+def fetchInstancesByState(state) {
+    def instances = sh(script: """
+        aws ec2 describe-instances \
+        --filters "Name=instance-state-name,Values=${state}" \
+        --query "Reservations[].Instances[].InstanceId" \
+        --output text
+    """, returnStdout: true).trim()
+    return instances
+}
