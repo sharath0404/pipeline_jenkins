@@ -95,6 +95,29 @@ pipeline {
                 }
             }
         }
+
+        stage('Wait for EC2 Instance Action Completion') {
+            steps {
+                script {
+                    def action = params.ACTION
+
+                    if (action == 'Start')
+                    {
+
+                    sh """
+                        aws ec2 wait instance-running --instance-ids ${env.RUNNING_INSTANCE_IDS}
+                    """
+                    }
+                    else if (action == 'Stop')
+                    {
+                    // Wait for the instance to stop
+                    sh """
+                        aws ec2 wait instance-stopped --instance-ids ${env.STOPPED_INSTANCE_IDS}
+                    """
+                    }
+                }
+            }
+        }
     }
 }
 
