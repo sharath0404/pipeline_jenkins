@@ -15,7 +15,7 @@ pipeline {
     }
 
     stages {
-                stage('Fetch Instances by State') {
+        stage('Fetch Instances by State') {
             steps {
                 script {
                     // Query running instances
@@ -29,6 +29,7 @@ pipeline {
                         println("Running instances found: ${env.RUNNING_INSTANCE_IDS}")
                     } else {
                         println("No running instances found")
+                        env.RUNNING_INSTANCE_IDS = ''  // Explicitly set to empty if none found
                     }
 
                     if (stoppedInstances) {
@@ -36,35 +37,27 @@ pipeline {
                         println("Stopped instances found: ${env.STOPPED_INSTANCE_IDS}")
                     } else {
                         println("No stopped instances found")
+                        env.STOPPED_INSTANCE_IDS = ''  // Explicitly set to empty if none found
                     }
                 }
             }
         }
 
-
         stage('Stop Instances') {
             when {
                 expression { 
-                     if ( params.ACTION == 'Stop' && env.RUNNING_INSTANCE_IDS.trim() && env.RUNNING_INSTANCES_IDS != 0 )
-                     {
-                        return true
-                     }
-                     else 
-                     {
-                        return false
-                     }
-                    
-                    }
+                    return params.ACTION == 'Stop' && env.RUNNING_INSTANCE_IDS?.trim()  // Proceed only if there are running instances
+                }
             }
             steps {
                 script {
-                        // Stop instances
-                        sh """
-                        aws ec2 stop-instances \
-                            --instance-ids ${env.RUNNING_INSTANCE_IDS} \
-                            --region ${env.AWS_REGION}
-                        """
-                        println("Stopped instances: ${env.RUNNING_INSTANCE_IDS}")
+                    // Stop instances
+                    sh """
+                    aws ec2 stop-instances \
+                        --instance-ids ${env.RUNNING_INSTANCE_IDS} \
+                        --region ${env.AWS_REGION}
+                    """
+                    println("Stopped instances: ${env.RUNNING_INSTANCE_IDS}")
                 }
             }
         }
@@ -72,26 +65,18 @@ pipeline {
         stage('Start Instances') {
             when {
                 expression { 
-                     if ( params.ACTION == 'Start' && env.STOPPED_INSTANCE_IDS.trim() && env.STOPPED_INSTANCE_IDS != 0)
-                     {
-                        return true
-                     }
-                     else 
-                     {
-                        return false
-                     }
-
-                 }
+                    return params.ACTION == 'Start' && env.STOPPED_INSTANCE_IDS?.trim()  // Proceed only if there are stopped instances
+                }
             }
             steps {
                 script {
-                        // Start instances
-                        sh """
-                        aws ec2 start-instances \
-                            --instance-ids ${env.STOPPED_INSTANCE_IDS} \
-                            --region ${env.AWS_REGION}
-                        """
-                        println("Started instances: ${env.STOPPED_INSTANCE_IDS}")
+                    // Start instances
+                    sh """
+                    aws ec2 start-instances \
+                        --instance-ids ${env.STOPPED_INSTANCE_IDS} \
+                        --region ${env.AWS_REGION}
+                    """
+                    println("Started instances: ${env.STOPPED_INSTANCE_IDS}")
                 }
             }
         }
@@ -101,19 +86,15 @@ pipeline {
                 script {
                     def action = params.ACTION
 
-                    if (action == 'Start')
-                    {
-
-                    sh """
-                        aws ec2 wait instance-running --instance-ids ${env.RUNNING_INSTANCE_IDS}
-                    """
-                    }
-                    else if (action == 'Stop')
-                    {
-                    // Wait for the instance to stop
-                    sh """
-                        aws ec2 wait instance-stopped --instance-ids ${env.STOPPED_INSTANCE_IDS}
-                    """
+                    if (action == 'Start') {
+                        sh """
+                            aws ec2 wait instance-running --instance-ids ${env.RUNNING_INSTANCE_IDS}
+                        """
+                    } else if (action == 'Stop') {
+                        // Wait for the instance to stop
+                        sh """
+                            aws ec2 wait instance-stopped --instance-ids ${env.STOPPED_INSTANCE_IDS}
+                        """
                     }
                 }
             }
@@ -128,5 +109,5 @@ def fetchInstancesByState(state) {
         --query "Reservations[].Instances[].InstanceId" \
         --output text
     """, returnStdout: true).trim()
-    return instances
+    return instances ?: ''  // Return an empty string if no instances are found
 }
