@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        KUBECONFIG = credentials('kubeconfig-secret')  // K8s kubeconfig stored as a secret
+        KUBECONFIG = credentials('kubeconfig-credentials-id')  // K8s kubeconfig stored as a secret
         DOCKER_CREDENTIALS = credentials('dockerhub-credentials')  // DockerHub credentials stored securely
     }
 
