@@ -1,5 +1,7 @@
 pipeline {
-    agent slave1
+     agent {
+      label 'slave1'
+    }
 
     environment {
         KUBECONFIG = credentials('kubeconfig-credentials-id')  // K8s kubeconfig stored as a secret
