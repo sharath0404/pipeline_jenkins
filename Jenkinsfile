@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout Code') { 
             steps {
-                git 'https://github.com/sharath0404/k8s.git'
+                git clone 'https://github.com/sharath0404/k8s.git'
             }
         }
 
