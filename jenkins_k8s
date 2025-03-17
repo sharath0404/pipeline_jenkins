@@ -1,9 +1,9 @@
 pipeline {
     agent any
     environment {
-        DB_HOST = "your-ec2-public-ip"
-        DB_USER = "myuser"
-        DB_PASS = "mypassword"
+        DB_HOST = 13.233.91.52
+        DB_USER = "sharath"
+        DB_PASS = "sharath"
     }
     stages {
         stage('Clone Repo') {
